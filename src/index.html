@@ -7,9 +7,19 @@
 </head>
 <body>
   <h1>QR Security Scanner</h1>
-  <input type="text" id="urlInput" placeholder="Вставьте URL из QR">
-  <button id="checkButton">Проверить</button>
+
+  <div class="controls">
+    <input type="text" id="urlInput" placeholder="Вставьте URL из QR или буфера">
+    <button id="checkButton">Проверить</button>
+    <button id="cameraButton">Включить камеру</button>
+    <button id="pasteButton">Вставить из буфера</button>
+  </div>
+
+  <video id="video" autoplay></video>
   <div id="result"></div>
+
+  <h2>История проверок:</h2>
+  <ul id="history"></ul>
 
   <script src="script.js"></script>
 </body>
