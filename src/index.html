@@ -13,6 +13,8 @@
     <button id="checkButton">Проверить</button>
     <button id="cameraButton">Включить камеру</button>
     <button id="pasteButton">Вставить из буфера</button>
+    <!-- Новая строка для загрузки изображения с компьютера -->
+    <input type="file" id="fileInput" accept="image/*">
   </div>
 
   <video id="video" autoplay></video>
@@ -21,6 +23,9 @@
   <h2>История проверок:</h2>
   <ul id="history"></ul>
 
+  <!-- Подключаем библиотеку для распознавания QR-кодов -->
+  <script src="https://unpkg.com/qr-scanner/qr-scanner.min.js"></script>
+  <!-- Наш скрипт -->
   <script src="script.js"></script>
 </body>
 </html>
