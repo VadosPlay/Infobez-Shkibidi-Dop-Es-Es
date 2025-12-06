@@ -1,79 +1,34 @@
-let historyList = [];
 
-const urlInput = document.getElementById("urlInput");
-const checkButton = document.getElementById("checkButton");
-const cameraButton = document.getElementById("cameraButton");
-const pasteButton = document.getElementById("pasteButton");
-const resultDiv = document.getElementById("result");
-const historyUl = document.getElementById("history");
-const video = document.getElementById("video");
+---
 
-let scanning = false;
-let stream = null;
+# 6️⃣ src/index.html
 
-// Проверка URL через сервер
-async function checkURL(url) {
-  const res = await fetch("/vt/scan", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ url })
-  });
-  const data = await res.json();
-  return `Malicious: ${data.malicious}, Harmless: ${data.harmless}, Suspicious: ${data.suspicious}, Undetected: ${data.undetected}`;
-}
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>QR Security Scanner</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>QR Security Scanner</h1>
 
-// Добавление в историю
-function addToHistory(url, status) {
-  historyList.push({ url, status });
-  const li = document.createElement("li");
-  li.textContent = `${url} → ${status}`;
-  historyUl.prepend(li);
-}
+  <div class="controls">
+    <input type="text" id="urlInput" placeholder="Вставьте URL из QR или буфера">
+    <button id="checkButton">Проверить</button>
+    <button id="cameraButton">Включить камеру</button>
+    <button id="pasteButton">Вставить из буфера</button>
+    <input type="file" id="fileInput" accept="image/*">
+  </div>
 
-// Кнопка проверки текста
-checkButton.addEventListener("click", async () => {
-  const url = urlInput.value.trim();
-  if (!url) return alert("Введите URL");
-  const status = await checkURL(url);
-  resultDiv.innerText = status;
-  addToHistory(url, status);
-});
+  <video id="video" autoplay></video>
+  <div id="result"></div>
 
-// Вставка из буфера
-pasteButton.addEventListener("click", async () => {
-  const text = await navigator.clipboard.readText();
-  urlInput.value = text;
-});
+  <h2>История проверок:</h2>
+  <ul id="history"></ul>
 
-// Камера для QR-кодов
-cameraButton.addEventListener("click", async () => {
-  if (scanning) {
-    stream.getTracks().forEach(track => track.stop());
-    scanning = false;
-    cameraButton.innerText = "Включить камеру";
-    return;
-  }
-
-  try {
-    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-    video.srcObject = stream;
-    scanning = true;
-    cameraButton.innerText = "Выключить камеру";
-
-    const qrScanner = new QrScanner(video, async result => {
-      urlInput.value = result;
-      const status = await checkURL(result);
-      resultDiv.innerText = status;
-      addToHistory(result, status);
-    });
-    qrScanner.start();
-
-  } catch (err) {
-    alert("Не удалось включить камеру: " + err);
-  }
-});
-
-// Подключаем библиотеку QrScanner через CDN
-const script = document.createElement("script");
-script.src = "https://unpkg.com/qr-scanner/qr-scanner.min.js";
-document.body.appendChild(script);
+  <script src="https://unpkg.com/qr-scanner/qr-scanner.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
